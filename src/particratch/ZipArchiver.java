@@ -33,18 +33,33 @@ public class ZipArchiver
 
             zipOutputStream.setLevel(0);
 
+            int progress = 0;
+            int progress_old = 0;
+
             //画像をアーカイブ
             for(int i = 0; i < this.byteBufferImages.length; ++i)
             {
                 zipOutputStream.putNextEntry(new ZipEntry(i + ".png"));
                 zipOutputStream.write(this.byteBufferImages[i]);
                 zipOutputStream.closeEntry();
+
+                //進捗状況の表示
+                progress = ((100 / this.byteBufferImages.length) * (i + 1)) / 4;
+                if(progress_old < progress)
+                {
+                    for(int j = 0; j < progress - progress_old; ++j)
+                        System.out.print("#");
+
+                    progress_old = progress;
+                }
             }
 
             //Jsonをアーカイブ
             zipOutputStream.putNextEntry(new ZipEntry("sprite.json"));
             zipOutputStream.write(this.byteBufferJson);
             zipOutputStream.closeEntry();
+
+            System.out.println("OK");
         }
         catch(IOException ioe)
         {

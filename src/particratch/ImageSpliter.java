@@ -2,6 +2,7 @@ package particratch;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -37,8 +38,12 @@ public class ImageSpliter
     {
         byte[][] byteBuffer = new byte[this.frames][];
         ByteArrayOutputStream byteArrayOutputStream = null;
+        BufferedOutputStream bufferedOutputStream = null;
         int oImageWidth = this.width / this.splitX;
         int oImageHeight = this.height / this.splitY;
+
+        int progress = 0;
+        int progress_old = 0;
 
         try
         {
@@ -48,10 +53,23 @@ public class ImageSpliter
                 for (int x = 0; x < this.splitX; ++x)
                 {
                     byteArrayOutputStream = new ByteArrayOutputStream();
-                    ImageIO.write(inImage.getSubimage(oImageWidth * x, oImageHeight * y, oImageWidth, oImageHeight), "png", byteArrayOutputStream);
+                    bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
+
+                    ImageIO.write(inImage.getSubimage(oImageWidth * x, oImageHeight * y, oImageWidth, oImageHeight), "png", bufferedOutputStream);
                     byteBuffer[f++] = byteArrayOutputStream.toByteArray();
 
+                    bufferedOutputStream.close();
                     byteArrayOutputStream.close();
+
+                    //進捗状況の表示
+                    progress = ((100 / this.frames) * f) / 4;
+                    if(progress_old < progress)
+                    {
+                        for(int i = 0; i < progress - progress_old; ++i)
+                            System.out.print("#");
+
+                        progress_old = progress;
+                    }
 
                     if (f >= this.frames)
                         break;
@@ -60,6 +78,8 @@ public class ImageSpliter
                 if (f >= this.frames)
                     break;
             }
+
+            System.out.println("OK");
         }
         catch(IOException ioe)
         {
@@ -68,6 +88,7 @@ public class ImageSpliter
         finally
         {
             try{byteArrayOutputStream.close();}catch(Exception e){}
+            try{bufferedOutputStream.close();}catch(Exception e){}
         }
 
         return byteBuffer;
