@@ -22,6 +22,7 @@ public final class ParticRatch
     private static int splitX;
     private static int splitY;
     private static int frames;
+    private static int skip;
     private static double wait;
     private static boolean optiloop;
     private static String spliteName;
@@ -29,7 +30,7 @@ public final class ParticRatch
     public static void main(String[] args)
     {
         // java -jar ParticRatch.jar Image.png 4 5 18 -w 1 -o Out.sb2 --optiloop
-        // 画像のファイルパス 横分割数 縦分割数 総フレーム    -w ウェイト  -o 出力ファイル名  --optiloop (ループに最適化)
+        // 画像のファイルパス 横分割数 縦分割数 総フレーム    -w ウェイト  -o 出力ファイル名  --optiloop (ループに最適化) -s 倍速
 
         //System.out.println(args.length);
 
@@ -65,6 +66,7 @@ public final class ParticRatch
             outFile = new File("Out.sb2");
             spliteName = "Effect";
             wait = -1.0;
+            skip = 0;
             optiloop = false;
 
             for(int i = 4; i < args.length; ++i)
@@ -91,6 +93,11 @@ public final class ParticRatch
                             spliteName = args[i];
                         break;
 
+
+                    case "-s":
+                        if(args.length >= ++i)
+                            skip = Integer.parseInt(args[i]);
+                        break;
 
                     case "--optiloop":
                         
@@ -179,11 +186,11 @@ public final class ParticRatch
         String help =
                 "使用法\njava -jar ParticRatch.jar [画像ﾌｧｲﾙのﾊﾟｽ] [横の分割数] [縦の分割数] [総フレーム数]\n\n" +
                 "その他オプション\n-w [1ﾌﾚｰﾑ当たりのｳｪｲﾄ]\t\t1ﾌﾚｰﾑごとに待ち時間を入れます。\n" +
-                "-n [ｽﾌﾟﾗｲﾄ名]\t\t\t\tｽﾌﾟﾗｲﾄ名を指定できます。\n" +
-                "-o [出力ﾌｧｲﾙ名]\t\t\t\t出力ﾌｧｲﾙ名を指定できます。\n" +
-                "--optiloop\t\t\t\t\tｴﾌｪｸﾄのﾙｰﾌﾟ再生時のちらつきを無くします。\n" +
-                "--help \t\t\t\t\t\tﾍﾙﾌﾟを表示します。\n" +
-                "--version \t\t\t\t\tﾊﾞｰｼﾞｮﾝを表示します。";
+                "-n [ｽﾌﾟﾗｲﾄ名]\t\t\tｽﾌﾟﾗｲﾄ名を指定できます。\n" +
+                "-o [出力ﾌｧｲﾙ名]\t\t\t出力ﾌｧｲﾙ名を指定できます。\n" +
+                "--optiloop\t\t\tｴﾌｪｸﾄのﾙｰﾌﾟ再生時のちらつきを無くします。\n" +
+                "--help \t\t\t\tﾍﾙﾌﾟを表示します。\n" +
+                "--version \t\t\tﾊﾞｰｼﾞｮﾝを表示します。";
 
         System.out.println(help);
     }
