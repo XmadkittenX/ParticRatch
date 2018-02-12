@@ -5,11 +5,14 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**Zipアーカイバ*/
-public class ZipArchiver
+public final class ZipArchiver
 {
-    byte[][] byteBufferImages;
-    byte[] byteBufferJson;
-    File outFile;
+    private byte[][] byteBufferImages;
+    private byte[] byteBufferJson;
+    private File outFile;
+
+    private int progress;
+    private int progress_old = 0;
 
     public ZipArchiver(byte[][] image, byte[] json, File o)
     {
@@ -33,9 +36,6 @@ public class ZipArchiver
 
             zipOutputStream.setLevel(0);
 
-            int progress = 0;
-            int progress_old = 0;
-
             //画像をアーカイブ
             for(int i = 0; i < this.byteBufferImages.length; ++i)
             {
@@ -44,14 +44,7 @@ public class ZipArchiver
                 zipOutputStream.closeEntry();
 
                 //進捗状況の表示
-                progress = ((100 / this.byteBufferImages.length) * (i + 1)) / 4;
-                if(progress_old < progress)
-                {
-                    for(int j = 0; j < progress - progress_old; ++j)
-                        System.out.print("#");
-
-                    progress_old = progress;
-                }
+                this.refleshProgressBar(this.byteBufferImages.length, i + 1);
             }
 
             //Jsonをアーカイブ
@@ -61,14 +54,6 @@ public class ZipArchiver
 
             System.out.println("OK");
         }
-        catch(IOException ioe)
-        {
-            throw ioe;
-        }
-        catch(Exception e)
-        {
-            throw e;
-        }
         finally
         {
             try{zipOutputStream.close();}catch (Exception e){}
@@ -76,5 +61,18 @@ public class ZipArchiver
             try{fileOutputStream.close();}catch (Exception e){}
         }
 
+    }
+
+    /**プログレスバーの表示・更新*/
+    private void refleshProgressBar(int var0, int var2)
+    {
+        this.progress = ((100 / var0) * var2) / 4;
+        if(this.progress_old < this.progress)
+        {
+            for(int i = 0; i < this.progress - this.progress_old; ++i)
+                System.out.print("#");
+
+            this.progress_old = this.progress;
+        }
     }
 }

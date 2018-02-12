@@ -3,7 +3,7 @@ package particratch;
 import java.security.MessageDigest;
 
 /**Jsowを書くクラス*/
-public class JsonWriter
+public final class JsonWriter
 {
     private int frames;
     private int imageWidth;
@@ -12,6 +12,9 @@ public class JsonWriter
     private boolean optiloop;
     private String spriteName;
     private byte[][] byteBuffer;
+
+    private int progress;
+    private int progress_old = 0;
 
     public JsonWriter(int f, double w, boolean o, String n, byte[][] bytes, int width, int height)
     {
@@ -72,9 +75,6 @@ public class JsonWriter
         String tmpStr;
         StringBuffer MD5Str;
 
-        int progress = 0;
-        int progress_old = 0;
-
         for(int i = 0; i < frames; ++i)
         {
             //画像のMD5ハッシュを求める
@@ -91,35 +91,38 @@ public class JsonWriter
                 MD5Str.append(tmpStr);
             }
 
-
             strbuf.append("{\"costumeName\": " + (i + 1) + "," +
                     "\"baseLayerID\": " + i + "," +
                     "\"baseLayerMD5\": \"" + MD5Str.toString() + ".png\"," +
                     "\"bitmapResolution\": 1," +
                     "\"rotationCenterX\": " + this.imageWidth / 2 + "," +
-                    "\"rotationCenterY\": " + this.imageHeight / 2 + "}");
+                    "\"rotationCenterY\": " + this.imageHeight / 2 + "},");
 
-            if(i + 1 != frames)
+            //最後の括弧閉じ
+            if(i + 1 == frames)
             {
-                strbuf.append(",");
-            }
-            else
-            {
+                strbuf.deleteCharAt(strbuf.length() - 1);
                 strbuf.append("]}");
             }
 
             //進捗状況の表示
-            progress = ((100 / this.frames) * (i + 1)) / 4;
-            if(progress_old < progress)
-            {
-                for(int j = 0; j < progress - progress_old; ++j)
-                    System.out.print("#");
-
-                progress_old = progress;
-            }
+            this.refleshProgressBar(this.frames, i + 1);
         }
         System.out.println("OK");
 
         return strbuf.toString().getBytes();
+    }
+
+    /**プログレスバーの表示・更新*/
+    private void refleshProgressBar(int var0, int var2)
+    {
+        this.progress = ((100 / var0) * var2) / 4;
+        if(this.progress_old < this.progress)
+        {
+            for(int i = 0; i < this.progress - this.progress_old; ++i)
+                System.out.print("#");
+
+            this.progress_old = this.progress;
+        }
     }
 }

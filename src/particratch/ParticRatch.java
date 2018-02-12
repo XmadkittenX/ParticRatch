@@ -1,20 +1,21 @@
 package particratch;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 /*
 ####    #   ####  ##### #####  ###  ####    #   #####  ###  #   #
 #   #  # #  #   #   #     #   #   # #   #  # #    #   #   # #   #
 ####   # #  #####   #     #   #     #####  # #    #   #     #####
 #     ##### #   #   #     #   #   # #   # #####   #   #   # #   #
-#     #   # #   #   #   #####  ###  #   # #   #   #    ###  #   #
+#     #   # #   #   #   #####  ###  #   # #   #   #    ###  #   # 0.1_beta
  */
 
 /**メインクラス*/
 public class ParticRatch
 {
     public static final String PROJECT_NAME = "ParticRatch";
-    public static final String PROJECT_VERSION = "0.0_beta";
+    public static final String PROJECT_VERSION = "0.1_beta";
 
     private static File inFile;
     private static File outFile;
@@ -99,19 +100,11 @@ public class ParticRatch
                 }
             }
 
-            /*
-            System.out.println(inFile.getPath());
-            System.out.println(outFile.getPath());
-            System.out.println(splitX);
-            System.out.println(splitY);
-            System.out.println(frames);
-            System.out.println(wait);
-            System.out.println(optiloop);
-            */
 
             /*エラーチェック*/
             checkArgErr();
 
+            /*作業開始*/
             ImageSpliter imageSpliter;
             JsonWriter jsonWriter;
             ZipArchiver zipArchiver;
@@ -156,28 +149,23 @@ public class ParticRatch
             stream.close();
             */
         }
-        catch(NumberFormatException nfe)
-        {
-            nfe.printStackTrace();
-        }
-        catch(IOException ioe)
-        {
-            ioe.printStackTrace();
-        }
-        catch(Exception e)
+        catch(Exception e)//どんな種類であれ例外が発生すれば即堕ちする
         {
             e.printStackTrace();
+            System.exit(1);
         }
+
+        System.exit(0);
     }
 
     /**コマンドライン引数のエラーチェック*/
     private static void checkArgErr() throws IOException,Exception
     {
-        if(splitX * splitY < frames)
-            throw new Exception( frames + "が" + splitX + " * " + splitY + "より大きくなることはありません。");
-
         if(!inFile.exists())
-            throw new IOException(inFile.getPath() + "は存在しません。");
+            throw new FileNotFoundException(inFile.getPath() + "は存在しません。");
+
+        if(splitX * splitY < frames)
+            throw new Exception( "総ﾌﾚｰﾑ数:" + frames + "が 縦分割数 * 横分割数:" + splitX + " * " + splitY + "より大きくなることはありません。");
 
         String ex[] = inFile.getName().split("\\.");
         //System.out.println("length" + ex.length);

@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**画像をぶった切る専門*/
-public class ImageSpliter
+public final class ImageSpliter
 {
     private BufferedImage inImage;
     private int splitX;
@@ -17,6 +17,8 @@ public class ImageSpliter
     private int width;
     private int height;
 
+    private int progress = 0;
+    private int progress_old = 0;
 
     public ImageSpliter(File infile, int sx, int sy, int f) throws IOException, Exception
     {
@@ -33,17 +35,14 @@ public class ImageSpliter
         }
     }
 
-    /**staticで定義した方がいい気がするが動けばいいので気にしないこと*/
+    /**画像の分割処理*/
     public byte[][] split() throws IOException
     {
-        byte[][] byteBuffer = new byte[this.frames][];
+        byte[][] byteBufferImages = new byte[this.frames][];
         ByteArrayOutputStream byteArrayOutputStream = null;
         BufferedOutputStream bufferedOutputStream = null;
         int oImageWidth = this.width / this.splitX;
         int oImageHeight = this.height / this.splitY;
-
-        int progress = 0;
-        int progress_old = 0;
 
         try
         {
@@ -56,20 +55,13 @@ public class ImageSpliter
                     bufferedOutputStream = new BufferedOutputStream(byteArrayOutputStream);
 
                     ImageIO.write(inImage.getSubimage(oImageWidth * x, oImageHeight * y, oImageWidth, oImageHeight), "png", bufferedOutputStream);
-                    byteBuffer[f++] = byteArrayOutputStream.toByteArray();
+                    byteBufferImages[f++] = byteArrayOutputStream.toByteArray();
 
                     bufferedOutputStream.close();
                     byteArrayOutputStream.close();
 
                     //進捗状況の表示
-                    progress = ((100 / this.frames) * f) / 4;
-                    if(progress_old < progress)
-                    {
-                        for(int i = 0; i < progress - progress_old; ++i)
-                            System.out.print("#");
-
-                        progress_old = progress;
-                    }
+                    this.refleshProgressBar(frames, f);
 
                     if (f >= this.frames)
                         break;
@@ -81,17 +73,13 @@ public class ImageSpliter
 
             System.out.println("OK");
         }
-        catch(IOException ioe)
-        {
-            throw ioe;
-        }
         finally
         {
             try{byteArrayOutputStream.close();}catch(Exception e){}
             try{bufferedOutputStream.close();}catch(Exception e){}
         }
 
-        return byteBuffer;
+        return byteBufferImages;
     }
 
     public int getSplitedImageWidth()
@@ -102,5 +90,18 @@ public class ImageSpliter
     public int getSplitedImageHeight()
     {
         return this.height / this.splitY;
+    }
+
+    /**プログレスバーの表示・更新*/
+    private void refleshProgressBar(int var0, int var2)//スーパークラスを作ってそこに置いとく方がいいかも
+    {
+        this.progress = ((100 / var0) * var2) / 4;
+        if(this.progress_old < this.progress)
+        {
+            for(int i = 0; i < this.progress - this.progress_old; ++i)
+                System.out.print("#");
+
+            this.progress_old = this.progress;
+        }
     }
 }
