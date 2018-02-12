@@ -38,7 +38,8 @@ public final class ImageSpliter
     /**画像の分割処理*/
     public byte[][] split() throws IOException
     {
-        byte[][] byteBufferImages = new byte[this.frames][];
+
+        byte[][] byteBufferImages = new byte[frames][];
         ByteArrayOutputStream byteArrayOutputStream = null;
         BufferedOutputStream bufferedOutputStream = null;
         int oImageWidth = this.width / this.splitX;

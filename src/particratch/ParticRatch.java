@@ -2,6 +2,7 @@ package particratch;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 /*
 ####    #   ####  ##### #####  ###  ####    #   #####  ###  #   #
@@ -22,7 +23,6 @@ public final class ParticRatch
     private static int splitX;
     private static int splitY;
     private static int frames;
-    private static int skip;
     private static double wait;
     private static boolean optiloop;
     private static String spliteName;
@@ -66,7 +66,6 @@ public final class ParticRatch
             outFile = new File("Out.sb2");
             spliteName = "Effect";
             wait = -1.0;
-            skip = 0;
             optiloop = false;
 
             for(int i = 4; i < args.length; ++i)
@@ -93,11 +92,6 @@ public final class ParticRatch
                             spliteName = args[i];
                         break;
 
-
-                    case "-s":
-                        if(args.length >= ++i)
-                            skip = Integer.parseInt(args[i]);
-                        break;
 
                     case "--optiloop":
                         
@@ -128,6 +122,7 @@ public final class ParticRatch
 
             System.out.println(outFile.getPath() + " へ出力が完了しました。");
 
+
             //画像出力てすと
             /*
             File testDir = new File("test/");
@@ -148,12 +143,15 @@ public final class ParticRatch
                 stream.write(byteBufferImages[i]);
                 stream.close();
             }
+            */
 
+            /*
             //Json出力てすと
             FileOutputStream stream = new FileOutputStream("test/sprite.json");
             stream.write(byteBufferJson);
             stream.close();
             */
+
         }
         catch(Exception e)//どんな種類であれ例外が発生すれば即堕ちする
         {
