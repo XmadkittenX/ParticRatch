@@ -2,7 +2,7 @@ package particratch;
 
 import java.security.MessageDigest;
 
-/**Jsowを書くクラス*/
+/**Jsonを書くクラス*/
 public final class JsonWriter
 {
     private int frames;

@@ -20,7 +20,7 @@ public final class ImageSpliter
     private int progress = 0;
     private int progress_old = 0;
 
-    public ImageSpliter(File infile, int sx, int sy, int f) throws IOException, Exception
+    public ImageSpliter(File infile, int sx, int sy, int f) throws Exception
     {
         this.inImage = ImageIO.read(infile);
         this.splitX = sx;

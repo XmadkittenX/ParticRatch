@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 
 /**メインクラス*/
-public class ParticRatch
+public final class ParticRatch
 {
     public static final String PROJECT_NAME = "ParticRatch";
     public static final String PROJECT_VERSION = "0.1_beta";
@@ -52,7 +52,6 @@ public class ParticRatch
             showHelp();
             return;
         }
-
 
         try
         {
