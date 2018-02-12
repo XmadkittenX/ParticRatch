@@ -62,12 +62,12 @@ public final class JsonWriter
         }
 
         //Notepad++で調整したもの
-        strbuf.append("{ \"objName\": \"" + this.spriteName + "\", \"variables\": [{ \"name\": \"ParticRatch: Anim\", \"value\": 3, \"isPersistent\": false }]," +
-                " \"scripts\": [[10, 10, [[\"procDef\", \"ParticRatch: PlayEffect: X: %n Y: %n Size: %n rotation %n\", [\"x\", \"y\", \"size\", \"rotation\"], [0, 0, 100, 90], false], " +
-                "[\"setVar:to:\", \"ParticRatch: Anim\", \"1\"], [\"gotoX:y:\", [\"getParam\", \"x\", \"r\"], [\"getParam\", \"y\", \"r\"]], [\"heading:\", [\"getParam\", \"rotation\", \"r\"]], [\"setSizeTo:\", [\"getParam\", \"size\", \"r\"]], " +
-                "" + showHideBlock[0] + " [\"doRepeat\",  "+ this.frames + ", [[\"lookLike:\", [\"readVariable\", \"ParticRatch: Anim\"]], [\"changeVar:by:\", \"ParticRatch: Anim\", 1]" + waitBlock + "]]" + showHideBlock[1] + "]]]," +
-                "\"currentCostumeIndex\":1,\"scratchX\":0,\"scratchY\":0,\"scale\":1,\"direction\":90,\"rotationStyle\":\"normal\",\"isDraggable\":false,\"indexInLibrary\":100000,\"visible\":true,\"spriteInfo\":{}," +
-                "\"costumes\": [");
+        strbuf.append("{\"objName\":\"" + this.spriteName + "\",\"variables\":[{\"name\":\"ParticRatch:Anim\",\"value\":3,\"isPersistent\":false}],"+
+                "\"scripts\":[[10,10,[[\"procDef\",\"ParticRatch:PlayEffect:X:%nY:%nSize:%nrotation%n\",[\"x\",\"y\",\"size\",\"rotation\"],[0,0,100,90],false],"+
+                "[\"setVar:to:\",\"ParticRatch:Anim\",\"1\"],[\"gotoX:y:\",[\"getParam\",\"x\",\"r\"],[\"getParam\",\"y\",\"r\"]],[\"heading:\",[\"getParam\",\"rotation\",\"r\"]],[\"setSizeTo:\",[\"getParam\",\"size\",\"r\"]],"+
+                "" + showHideBlock[0] + "[\"doRepeat\"," + this.frames + ",[[\"lookLike:\",[\"readVariable\",\"ParticRatch:Anim\"]],[\"changeVar:by:\",\"ParticRatch:Anim\",1]" + waitBlock + "]]" + showHideBlock[1] + "]]],"+
+                "\"currentCostumeIndex\":1,\"scratchX\":0,\"scratchY\":0,\"scale\":1,\"direction\":90,\"rotationStyle\":\"normal\",\"isDraggable\":false,\"indexInLibrary\":100000,\"visible\":true,\"spriteInfo\":{},"+
+                "\"costumes\":[");
 
         //costumeの情報を書き出す
         MessageDigest digest = MessageDigest.getInstance("MD5");
@@ -91,12 +91,12 @@ public final class JsonWriter
                 MD5Str.append(tmpStr);
             }
 
-            strbuf.append("{\"costumeName\": " + (i + 1) + "," +
-                    "\"baseLayerID\": " + i + "," +
-                    "\"baseLayerMD5\": \"" + MD5Str.toString() + ".png\"," +
-                    "\"bitmapResolution\": 1," +
-                    "\"rotationCenterX\": " + this.imageWidth / 2 + "," +
-                    "\"rotationCenterY\": " + this.imageHeight / 2 + "},");
+            strbuf.append("{\"costumeName\":" + ( i + 1 ) + ","+
+                    "\"baseLayerID\":" + i + ","+
+                    "\"baseLayerMD5\":\""+MD5Str.toString()+".png\","+
+                    "\"bitmapResolution\":1,"+
+                    "\"rotationCenterX\":" + this.imageWidth / 2 + ","+
+                    "\"rotationCenterY\":" + this.imageHeight / 2 + "},");
 
             //最後の括弧閉じ
             if(i + 1 == frames)
