@@ -46,12 +46,12 @@ public final class ParticRatch
                 default:
                     showHelp();
             }
-            return;
+            System.exit(0);
         }
         else if(args.length < 4)
         {
             showHelp();
-            return;
+            System.exit(0);
         }
 
         try
@@ -74,22 +74,28 @@ public final class ParticRatch
                 {
                     case "-w":
 
-                        if(args.length >= ++i)
+                        if(args.length > ++i)
                             wait = Double.parseDouble(args[i]);
+                        else
+                            throw new Exception("-w オプションの用法が間違っています!");
                         break;
 
 
                     case "-o":
 
-                        if(args.length >= ++i)
+                        if(args.length > ++i)
                             outFile = new File(args[i]);
+                        else
+                            throw new Exception("-o オプションの用法が間違っています!");
                         break;
 
 
                     case "-n":
 
-                        if(args.length >= ++i)
+                        if(args.length > ++i)
                             spliteName = args[i];
+                        else
+                            throw new Exception("-n オプションの用法が間違っています!");
                         break;
 
 
@@ -97,6 +103,16 @@ public final class ParticRatch
                         
                         optiloop = true;
                         break;
+
+                    case "--help":
+                        showHelp();
+                        break;
+                    case "--version":
+                        showVersion();
+                        break;
+
+                    default:
+                        throw new Exception("オプション:" + args[i] + " は存在しません。");
                 }
             }
 
@@ -155,7 +171,7 @@ public final class ParticRatch
         }
         catch(Exception e)//どんな種類であれ例外が発生すれば即堕ちする
         {
-            e.printStackTrace();
+            System.err.println("ERROR: " + e.getMessage());
             System.exit(1);
         }
 
@@ -163,10 +179,10 @@ public final class ParticRatch
     }
 
     /**コマンドライン引数のエラーチェック*/
-    private static void checkArgErr() throws IOException,Exception
+    private static void checkArgErr() throws Exception
     {
         if(!inFile.exists())
-            throw new FileNotFoundException(inFile.getPath() + "は存在しません。");
+            throw new Exception("ファイル:" +inFile.getPath() + " は存在しません。");
 
         if(splitX * splitY < frames)
             throw new Exception( "総ﾌﾚｰﾑ数:" + frames + "が 縦分割数 * 横分割数:" + splitX + " * " + splitY + "より大きくなることはありません。");
@@ -174,7 +190,7 @@ public final class ParticRatch
         String ex[] = inFile.getName().split("\\.");
         //System.out.println("length" + ex.length);
         if(!ex[ex.length - 1].toLowerCase().equals("png") && !ex[ex.length - 1].toLowerCase().equals("bmp"))
-            throw new IOException("サポートされていないファイル形式です。 :" + ex[ex.length - 1]);
+            throw new Exception("サポートされていないファイル形式です。 :" + ex[ex.length - 1]);
 
     }
 
